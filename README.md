@@ -28,10 +28,10 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 First you have create a db. Change to folder docker and exec:
 `make create-db name=nameForYourDb`
 
-default db name for the backend is unit23_sam, if you need a other name edit `server/db/connect.js` and set the db name you have given in the make cmd.
+default db name for the backend is unit23_sam, if you need a other name edit `server/config/config.json` and set the db name you have given in the make cmd.
 
 For the connect we use [Sequelize](http://sequelize.readthedocs.io) a node.js orm.
-In the file `server/models/demo.js` you can find a demo model.
+In the file `server/models/User.js` you can find a User model.
 If the table is not in the database, the model will create the table on server start.  
 
 
@@ -45,10 +45,10 @@ You should see:
 [nodemon] starting `node src/app.js`
 Connection has been established successfully.
 ```
-open http://localhost/api and you should see a JSON response like
+open http://localhost/api and you should see a response like
+Welcome to rest boilerplate
 
-```json
-    {"count":1,"rows":[{"id":1,"title":"First one","description":"","createdAt":"2018-08-12T15:05:36.000Z","updatedAt":"2018-08-12T15:05:36.000Z"}]}
+
 ```
 ## REST API
 
