@@ -23,7 +23,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
 app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 
-
+app.get('/' , (req,res) => {
+  res.send('Welcome to rest boilerplate ')
+})
 
 app.use("/login", login);
 app.use("/signup", signUp);
