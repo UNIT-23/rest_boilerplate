@@ -1,3 +1,11 @@
+## Getting Started
+
+1. Clone the repo and make it yours:
+
+```bash
+git clone https://github.com/UNIT-23/rest_boilerplate.git
+cd rest_boilerplate
+
 To use this setup, you do not need a install nodejs on your host. All what you need a running docker. This howto is only
 tested on linux. The images shares the files with the host. so you need no upload to deploy your images on the container
 
