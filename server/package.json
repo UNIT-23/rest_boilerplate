@@ -1,0 +1,45 @@
+{
+  "name": "crudslist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "format": "prettier --write \"**/*.{js,jsx}\"",
+    "lint": "eslint \"**/*.{js,jsx}\" --quiet"
+  },
+  
+ "repository": "https://github.com/UNIT-23/rest_boilerplate.git",
+  "author": "ahmadnoorniazi <bc180201966@vu.edu.pk>",
+  "keywords": [],
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^7.0.0-0",
+    "bcrypt": "^2.0.1",
+    "bluebird": "^3.5.3",
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.5",
+    "dotenv": "^6.1.0",
+    "eslint": "^5.9.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "express": "4.16.4",
+    "http-errors": "^1.7.1",
+    "jest": "^23.6.0",
+    "jsonwebtoken": "^8.4.0",
+    "lodash": "^4.17.11",
+    "morgan": "^1.9.1",
+    "mysql2": "1.6.4",
+    "path": "^0.12.7",
+    "prettier": "^1.15.2",
+    "sequelize": "^4.5.0",
+    "supertest": "^3.3.0",
+    "uniqid": "^5.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
+  }
+}

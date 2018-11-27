@@ -1,0 +1,48 @@
+
+version: '3'
+services:
+  #mysql server
+  mysql:
+    container_name: mysql
+    restart: on-failure:2
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_USER: 'root'
+      MYSQL_PASS: 'root'
+    volumes:
+      - ./mounts/mysql:/var/lib/mysql
+      - ./mounts/scripts:/scripts
+    ports:
+      - "3306:3306"
+
+  #node express server
+  nodeServer:
+    container_name: node-server
+    working_dir: /node/server
+    restart: on-failure:2
+    depends_on:
+      - mysql
+    image: node
+    command: /node/createUser.sh
+    volumes:
+      - ../server:/node/server
+      - ./mounts/scripts/createUser.sh:/node/createUser.sh:ro
+    links:
+      - mysql
+  #reverse proxy
+  nginx:
+    container_name: nginx
+    restart: on-failure:2
+    depends_on:
+      - nodeServer
+    image: nginx:latest
+    volumes:
+      - ./mounts/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./mounts/nginx/cert.crt:/etc/nginx/cert.crt:ro
+      - ./mounts/nginx/cert.key:/etc/nginx/cert.key:ro
+    links:
+      - nodeServer
+    ports:
+      - "80:80"
+      - "443:443"

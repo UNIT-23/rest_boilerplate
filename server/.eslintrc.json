@@ -1,0 +1,45 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+
+  "env": {
+    "es6": true,
+    "node": true,
+    "mocha": true
+  },
+
+  "plugins": [
+    "import",
+    "node",
+    "promise",
+    "standard"
+  ],
+
+  "globals": {
+    "document": false,
+    "navigator": false,
+    "window": false
+  },
+
+  "rules": {
+    "max-len": 2,
+    "indent": ["error", 2, {
+      "MemberExpression": 1
+    }],
+    "arrow-parens": 0,
+    "no-var": 2,
+    "prefer-const": 1,
+    "camelcase" : ["error", {"properties" : "always"}],
+    "no-underscore-dangle": 2,
+    "key-spacing": ["error", { "beforeColon": false, "afterColon": true, "align" : "colon" }],
+    "object-curly-spacing": ["error", "always"],
+    "curly": ["error", "all"],
+    "brace-style" : ["error", "1tbs"],
+    "no-console" : "error"
+  }
+}
