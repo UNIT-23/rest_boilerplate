@@ -2,6 +2,7 @@ const JWT = require("../../modules/jwt/index");
 module.exports = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
+    console.log('the token is',token)
     const decoded = JWT.verify(token);
     res.userData = decoded;
     next();

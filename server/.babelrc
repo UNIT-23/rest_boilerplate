@@ -1,17 +1,19 @@
 
 {
-    "presets": [
-      ["@babel/preset-env", {
-        "loose": true,
+  "presets": [
+    [
+      "env",
+      {
         "targets": {
-          "node": "6.9"
+          "browsers": ["last 2 versions"]
         }
-      }]
-    ],
-    "env": {
-      "test": {
-        "plugins": ["babel-macros"]
       }
+    ]
+  ],
+  "plugins": ["transform-class-properties"],
+  "env": {
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs"]
     }
   }
-  
+}

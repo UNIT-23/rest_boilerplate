@@ -25,9 +25,5 @@ module.exports = function() {
       "Public and Private Auth Key does not exist, Please generate one";
     throw new Error(message);
   }
-  console.log("the file key", publicKey);
-  console.log("the file key", privateKey);
-
   return { publicKey, privateKey };
 };
-

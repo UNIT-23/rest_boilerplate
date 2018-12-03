@@ -2,7 +2,7 @@
 export USER_ID =$(shell id -u)
 
 server:
-	docker exec -it -u node node-server bash -c 'yarn install && npm start'
+	docker exec -it -u node node-server bash -c 'yarn && yarn start'
 
 compose:
 	@echo User id for node will:  $$user_UID

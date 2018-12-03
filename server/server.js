@@ -3,8 +3,8 @@ const app = express();
 const bodyParser = require("body-parser");
 const login = require("./app/routes/login.js");
 const signUp = require("./app/routes/singUp.js");
-const removeUser = require("./app/routes/deleteUser.js");
-const updateUser = require('./app/routes/updateUser.js')
+const bluePrint = require('./app/routes/blue-print')
+const data = require('./app/routes/getData')
 
 const cors = require("cors");
 const morgan = require("morgan");
@@ -23,18 +23,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
 app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 
-app.get('/' , (req,res,next) => {
-  res.send('Welcome to rest boilerplate ')
-})
+require("./app/middlware")(app);
+
+// md(app)
+
+app.get("/", (req, res, next) => {
+  res.send("Welcome to rest boilerplate ");
+});
+
+// app.use('/',routes)
 
 app.use("/login", login);
 app.use("/signup", signUp);
-app.use("/delete", removeUser);
-app.use("/update", updateUser);
-
+app.use('/api',bluePrint)
+app.use('/getData',data)
 
 db.sequelize.sync().then(function() {
   app.listen(PORT, function() {
     console.log(`Listening on PORT ${PORT}`);
   });
 });
+
+module.exports = app;

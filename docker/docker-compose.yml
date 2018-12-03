@@ -23,7 +23,7 @@ services:
     restart: on-failure:2
     depends_on:
       - mysql
-    image: node
+    image: node:8.14.0
     command: /node/createUser.sh
     volumes:
       - ../server:/node/server
