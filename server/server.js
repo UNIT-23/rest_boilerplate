@@ -25,13 +25,11 @@ app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 
 require("./app/middlware")(app);
 
-// md(app)
 
 app.get("/", (req, res, next) => {
   res.send("Welcome to rest boilerplate ");
 });
 
-// app.use('/',routes)
 
 app.use("/login", login);
 app.use("/signup", signUp);

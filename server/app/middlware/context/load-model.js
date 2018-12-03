@@ -8,7 +8,7 @@ const models = require("../../../models");
 const lowerCaseModels = _.mapKeys(models, (val, key) => _.lowerCase(key));
 const upperCaseModels = _.mapKeys(models, (val, key) => _.upperCase(key));
 const modelNames = _.concat(lowerCaseModels, upperCaseModels);
-const REGEX = '/:modelName/:id';
+const REGEX = '/api/:modelName/:id';
 const VALIDATION = [
   param('modelName').isAlpha().isIn(modelNames),
   param('id')
@@ -17,10 +17,7 @@ const VALIDATION = [
 
 const middleware = (req, res, next) => {
   const modelName = _.lowerCase(req.params.modelName);
-  console.log(modelName);
   const errors = validationResult(req).mapped()
-  console.log('the id is',req.params.id)
-  console.log('this page exec')
   if (!_.has(errors, modelName) && !_.has(errors,'id')) {
       console.log('this middleware calls')
     req.context = req.context || {}
@@ -38,4 +35,4 @@ const middleware = (req, res, next) => {
   }
 }
 
-module.exports = server => server.use('/api/:modelName/:id', VALIDATION, middleware)
+module.exports = server => server.use(REGEX, VALIDATION, middleware)
