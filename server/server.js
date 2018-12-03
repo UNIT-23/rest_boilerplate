@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
-let PORT = process.env.PORT || 8081;
+const PORT = process.env.PORT || 8081;
 
 // Sets up the Express app to handle data parsing
 app.use(bodyParser.json());
@@ -36,8 +36,16 @@ app.use("/signup", signUp);
 app.use('/api',bluePrint)
 app.use('/getData',data)
 
+app.use((req, res, next) => {
+  if (res.responseData) {
+    res.json(res.responseData)
+  }
+  next()
+})
+
 db.sequelize.sync().then(function() {
   app.listen(PORT, function() {
+    // eslint-disable-next-line no-console
     console.log(`Listening on PORT ${PORT}`);
   });
 });

@@ -4,7 +4,7 @@ const constant = require("./constants");
 const db = require("../../models");
 const methods = require("./Methods");
 
-exports.user_login = async (req, res, next) => {
+exports['user_login'] = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
@@ -13,39 +13,38 @@ exports.user_login = async (req, res, next) => {
   }
 
   const user = await db.User.findOne({ where: { email: email } })
-      if (!user) {
-        return next(
-          HTTPError(400, constant.ERROR_USER_NOT_FOUND, {
-            errors: [{ path: "email", message: constant.ERROR_USER_NOT_FOUND }]
-          })
-        );
-      }
-      if (!methods.validPassword(password, user.password)) {
-        return next(
-          HTTPError(400, constant.ERROR_INCORRECT_PASSWORD, {
-            errors: [
-              {
-                path: "password",
-                message: constant.ERROR_INCORRECT_PASSWORD
-              }
-            ]
-          })
-        );
-      }
+  if (!user) {
+    return next(
+      HTTPError(400, constant.ERROR_USER_NOT_FOUND, {
+        errors: [{ path: "email", message: constant.ERROR_USER_NOT_FOUND }]
+      })
+    );
+  }
+  if (!methods.validPassword(password, user.password)) {
+    return next(
+      HTTPError(400, constant.ERROR_INCORRECT_PASSWORD, {
+        errors: [
+          {
+            path   : "password",
+            message: constant.ERROR_INCORRECT_PASSWORD
+          }
+        ]
+      })
+    );
+  }
 
-      try {
-        const payload = { userId: user.id };
-        const Token = JWT.sign(payload);
-        const data = (res.responseData = { token: Token, user: user });
-        res.status(201).json(data);
-        return next();
-      }
-     catch(e){
-       next(e)
-     }
+  try {
+    const payload = { userId: user.id };
+    const Token = JWT.sign(payload);
+    const data = (res.responseData = { token: Token, user: user });
+    res.status(201).json(data);
+    return next();
+  } catch(e){
+    next(e)
+  }
 };
 
-exports.user_signUp = async (req, res, next) => {
+exports['user_signUp'] = async (req, res, next) => {
   const firstname = req.body.firstname;
   const lastname = req.body.lastname;
   const email = req.body.email;
@@ -55,25 +54,24 @@ exports.user_signUp = async (req, res, next) => {
     return next(HTTPError.BadRequest(constant.ERROR_EMAIL_PASSWORD_REQUIRED));
   }
 
-   const user = await db.User.findAll({ where: { email: email } })
-    if (user.length >= 1) {
-      return next(HTTPError.BadRequest(constant.ERROR_EMAIL_EXIST));
-    } 
-    try{
-      const newUser = await db.User.create({
-        firstname: firstname,
-        lastname: lastname,
-        email: email,
-        password: password
-      });
-      res.status(201).json({
-        message: constant.USER_CREATED
-      });
-    }
-    catch(e){
-      res.status(500).json({
-        error: err
-      });
-    }
+  const user = await db.User.findAll({ where: { email: email } })
+  if (user.length >= 1) {
+    return next(HTTPError.BadRequest(constant.ERROR_EMAIL_EXIST));
+  } 
+  try{
+    const newUser = await db.User.create({
+      firstname: firstname,
+      lastname : lastname,
+      email    : email,
+      password : password
+    });
+    res.status(201).json({
+      message: constant.USER_CREATED
+    });
+  } catch(e){
+    res.status(500).json({
+      error: err
+    });
+  }
 };
 

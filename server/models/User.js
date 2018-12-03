@@ -8,23 +8,23 @@ module.exports = function(sequelize, DataTypes) {
     "User",
     {
       id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
+        type         : Sequelize.INTEGER,
+        primaryKey   : true,
         autoIncrement: true
       },
       firstname: {
-        type: Sequelize.STRING,
-        unique: false,
+        type     : Sequelize.STRING,
+        unique   : false,
         allowNull: false
       },
       lastname: {
-        type: Sequelize.STRING,
-        unique: false,
+        type     : Sequelize.STRING,
+        unique   : false,
         allowNull: false
       },
       email: {
-        type: Sequelize.STRING,
-        unique: true,
+        type     : Sequelize.STRING,
+        unique   : true,
         allowNull: false
       },
       password: {
