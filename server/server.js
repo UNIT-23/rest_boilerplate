@@ -9,6 +9,7 @@ const data = require('./app/routes/getData')
 const cors = require("cors");
 const morgan = require("morgan");
 const db = require("./models");
+
 app.disable("x-powered-by");
 app.use(morgan("dev"));
 app.use(bodyParser.json());
@@ -29,7 +30,6 @@ require("./app/middlware")(app);
 app.get("/", (req, res, next) => {
   res.send("Welcome to rest boilerplate ");
 });
-
 
 app.use("/login", login);
 app.use("/signup", signUp);

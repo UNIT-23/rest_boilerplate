@@ -7,7 +7,7 @@ const { param, validationResult } = require('express-validator/check')
 const { isIn } = require('validator')
 const MODEL_NOT_FOUND = 'Model was not found'
 const lowerCaseModelNames = Object.keys(models.lowerCaseModels)
-
+const auth = require('../middlware/check-auth')
 const modelIdValid = param('id').exists().isInt()
 const modelNameValid = param('modelName').isAlpha()
   .custom(modelName => isIn(modelName.toLowerCase(), lowerCaseModelNames))
@@ -97,7 +97,7 @@ router.get('/:modelName/count', [modelNameValid], (req, res, next) => {
 
 // [CREATE]
 // POST A Model Object
-router.post('/:modelName', [modelNameValid], (req, res, next) => {
+router.post('/:modelName', [modelNameValid, auth], (req, res, next) => {
   if (!has(validationResult(req).mapped(), 'modelName')) {
     const attributes = req.body || {}
     const modelClass = req.context.modelClass
@@ -125,29 +125,30 @@ router.post('/:modelName', [modelNameValid], (req, res, next) => {
 // [UPDATE]
 // PUT A Model Object
 router
-  .put('/:modelName/:id', [modelNameValid, modelIdValid], (req, res, next) => {
-    if (!has(validationResult(req).mapped(), 'modelName') &&
+  .put('/:modelName/:id', [modelNameValid, modelIdValid, auth],
+    (req, res, next) => {
+      if (!has(validationResult(req).mapped(), 'modelName') &&
       (!has(validationResult(req).mapped(), 'id'))) {
-      const attributes = req.body || {}
-      const model = req.context.model
+        const attributes = req.body || {}
+        const model = req.context.model
 
-      // AuthManager.canUserUpdateModel(req.context.user, model)
-      //   .then(() => 
-      model.update(attributes, { context: req.context })
+        // AuthManager.canUserUpdateModel(req.context.user, model)
+        //   .then(() => 
+        model.update(attributes, { context: req.context })
         // )
-        .then(() => {
-          res.responseData = model.toJSON()
-          next()
-        })
-        .catch(err => handleAuthError(err, next))
-    } else {
-      next()
-    }
-  })
+          .then(() => {
+            res.responseData = model.toJSON()
+            next()
+          })
+          .catch(err => handleAuthError(err, next))
+      } else {
+        next()
+      }
+    })
 
 // [PATCH]
 // PATCH A Model Object
-router.patch('/:modelName/:id', [modelNameValid, modelIdValid],
+router.patch('/:modelName/:id', [modelNameValid, modelIdValid, auth],
   (req, res, next) => {
     if (!has(validationResult(req).mapped(), 'modelName') &&
       (!has(validationResult(req).mapped(), 'id'))) {
@@ -175,7 +176,7 @@ router.patch('/:modelName/:id', [modelNameValid, modelIdValid],
 
 // [DELETE]
 // DELETE A Model Object
-router.delete('/:modelName/:id', [modelNameValid, modelIdValid],
+router.delete('/:modelName/:id', [modelNameValid, modelIdValid, auth],
   (req, res, next) => {
     if (!has(validationResult(req).mapped(), 'modelName') &&
     (!has(validationResult(req).mapped(), 'id'))) {
