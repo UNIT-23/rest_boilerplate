@@ -21,7 +21,6 @@ router
     if (!has(validationResult(req).mapped(), 'modelName') &&
      (!has(validationResult(req).mapped(), 'id'))) {
       res.responseData = req.context.model.toJSON()
-      res.send(res.responseData)
       next()
     } else {
       next()
