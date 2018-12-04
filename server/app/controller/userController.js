@@ -36,8 +36,12 @@ exports.user_login = async (req, res, next) => {
       try {
         const payload = { userId: user.id };
         const Token = JWT.sign(payload);
-        const data = (res.responseData = { token: Token, user: user });
-        res.status(201).json(data);
+        res.responsedata = { token: Token, user: user }
+        const data = { token: Token, user: user };
+        res.status(201).json({
+          message: "login Successfully",
+          data: data
+        });
         return next();
       }
      catch(e){
@@ -57,6 +61,7 @@ exports.user_signUp = async (req, res, next) => {
 
    const user = await db.User.findAll({ where: { email: email } })
     if (user.length >= 1) {
+      res.status(400).json(constant.ERROR_EMAIL_EXIST)
       return next(HTTPError.BadRequest(constant.ERROR_EMAIL_EXIST));
     } 
     try{
@@ -67,12 +72,13 @@ exports.user_signUp = async (req, res, next) => {
         password: password
       });
       res.status(201).json({
-        message: constant.USER_CREATED
+        message: constant.USER_CREATED,
+        user:newUser
       });
     }
     catch(e){
       res.status(500).json({
-        error: err
+        error: e
       });
     }
 };

@@ -9,8 +9,8 @@
   "test": {
     "username": "root",
     "password": "root",
-    "database": "database_test",
-    "host": "mysql",
+    "database": "test",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "production": {

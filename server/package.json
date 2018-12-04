@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "format": "prettier --write \"**/*.{js,jsx}\"",
     "lint": "eslint \"**/*.{js,jsx}\" --quiet",
     "test": "jest --watch"
@@ -20,7 +20,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "babel-preset-env": "^1.7.0",
-    "bcrypt": "^2.4.3",
+    "bcrypt": "3.0.2",
     "bluebird": "^3.5.3",
     "body-parser": "^1.17.2",
     "chai": "^4.2.0",
@@ -35,7 +35,7 @@
     "express": "4.16.4",
     "express-validator": "^4.3.0",
     "http-errors": "^1.7.1",
-    "jest": "^23.6.0",
+    "jest": "23.6.0",
     "jest-express": "^1.9.0",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
@@ -44,12 +44,14 @@
     "path": "^0.12.7",
     "prettier": "^1.15.2",
     "sequelize": "^4.5.0",
+    "sequelize-mock": "^0.10.2",
     "superagent": "^4.0.0",
     "supertest": "3.0.0",
     "uniqid": "^5.0.3",
     "validator": "^10.9.0"
   },
   "devDependencies": {
+    "jest-cli": "23.6.0",
     "nodemon": "^1.18.6"
   }
 }

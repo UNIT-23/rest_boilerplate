@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../../models");
 const checkAuth = require('../middlware/check-auth')
 
-router.get("/",checkAuth,(req, res) => {
+router.get("/",(req, res) => {
   db.User.findAll({}).then(user => {
     res.status(200).json(user);
   })

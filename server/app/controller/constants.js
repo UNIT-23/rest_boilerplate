@@ -8,7 +8,8 @@ module.exports = {
   ERROR_CHANGE_PASSWORD: "only the logged in user can change his own password",
   ERROR_EMAIL_PASSWORD_REQUIRED: "email and password are empty",
   ERROR_USER_NOT_FOUND: "user does not exist",
-  ERROR_EMAIL_EXIST: "this email already exist.use another email",
+  ERROR_EMAIL_EXIST: "this email already exist use another email",
   USER_CREATED: "user created",
-  USER_UPDATED: "user updated"
+  USER_UPDATED: "user updated",
+  ERROR_INCORRECT_PASSWORD:"invalid password"
 };
