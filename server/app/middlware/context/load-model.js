@@ -5,10 +5,9 @@ const _ = require('lodash')
 const ERRNOTFOUND = 'Unable to find the requested entity';
 const REGEX = '/api/:modelName/:id';
 const VALIDATION = [
-  param('id').exists().isUUID()
+  param('id').exists().isInt()
 ]
 const middleware = (req, res, next) => {
-  const modelName = _.lowerCase(req.params.modelName);
   const errors = validationResult(req).mapped()
   if (!_.has(errors,'id')) {
     req.context = req.context || {}

@@ -1,24 +1,24 @@
 const express = require('express')
 const router = express.Router()
-const { has, toLower, find, isEmpty, extend,flatten,lowerCase,upperCase }
- = require('lodash')
+const { has, toLower, find, isEmpty, extend } = require('lodash')
 const HTTPError = require('http-errors')
 const models = require("../../models");
-const checkAuth = require('../middlware/check-auth')
-
 const { param, validationResult } = require('express-validator/check')
-const modelNames = flatten(Object
-  .keys(models).map(key=> [lowerCase(key), upperCase(key)]))
+const { isIn } = require('validator')
+const MODEL_NOT_FOUND = 'Model was not found'
+const lowerCaseModelNames = Object.keys(models.lowerCaseModels)
 
-const modelNameValid = param('modelName').isAlpha().isIn(modelNames)
-const modelIdValid = param('id').exists().isUUID()
+const modelIdValid = param('id').exists().isInt()
+const modelNameValid = param('modelName').isAlpha()
+  .custom(modelName => isIn(modelName.toLowerCase(), lowerCaseModelNames))
+  .withMessage(MODEL_NOT_FOUND)
+
 
 // [READ]
 // GET A Model Object
 router
   .get('/:modelName/:id',[modelNameValid, modelIdValid], (req, res, next) => {
-    const modelName = lowerCase(req.params.modelName);
-    if (!has(validationResult(req).mapped(), modelName) &&
+    if (!has(validationResult(req).mapped(), 'modelName') &&
      (!has(validationResult(req).mapped(), 'id'))) {
       res.responseData = req.context.model.toJSON()
       res.send(res.responseData)
