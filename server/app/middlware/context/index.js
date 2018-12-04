@@ -6,5 +6,6 @@ module.exports = server => {
 
   require("./loadModelClass")(server);
   require('./load-model')(server)
+  require('./findOptions')(server)
 
 };

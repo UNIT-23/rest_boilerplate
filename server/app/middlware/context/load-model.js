@@ -19,7 +19,6 @@ const middleware = (req, res, next) => {
   const modelName = _.lowerCase(req.params.modelName);
   const errors = validationResult(req).mapped()
   if (!_.has(errors, modelName) && !_.has(errors,'id')) {
-      console.log('this middleware calls')
     req.context = req.context || {}
     req.context.modelClass.findByPk(req.params.id)
       .then((instance) => {

@@ -34,7 +34,7 @@ describe('Test the root path', () => {
         })   
         token = response.body.data.token;   
                 expect(response.status).toBe(201);
-                expect(response.body.message).toEqual('login Successfully')
+                expect(response.body.message).toEqual(constants.SUCCESS_EMAIL_VERIFIED)
                 expect(token).toBeDefined()
                 done()
             });

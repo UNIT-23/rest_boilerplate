@@ -14,7 +14,7 @@ services:
       - ./mounts/mysql:/var/lib/mysql
       - ./mounts/scripts:/scripts
     ports:
-      - "3306:3306"
+      - "3307:3306"
 
   #node express server
   nodeServer:

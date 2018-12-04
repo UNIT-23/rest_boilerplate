@@ -7,9 +7,9 @@ router.get("/",(req, res) => {
   db.User.findAll({}).then(user => {
     res.status(200).json(user);
   })
-  .catch(err =>{
-    res.send(err)
-  })
+    .catch(err =>{
+      res.send(err)
+    })
 });
 
 module.exports = router;

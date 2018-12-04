@@ -1,30 +1,30 @@
 const { param, validationResult } = require("express-validator/check");
 const models = require("../../../models");
-const _ = require("lodash");
+const { has } = require("lodash");
+const MODEL_NOT_FOUND = 'Model was not found'
+const { isIn } = require('validator')
 
-const lowerCaseModels = _.mapKeys(models, (val, key) => _.lowerCase(key));
-const upperCaseModels = _.mapKeys(models, (val, key) => _.upperCase(key));
-const modelNames = _.concat(lowerCaseModels, upperCaseModels);
-
+const lowerCaseModelNames = Object.keys(models.lowerCaseModels)
 const VALIDATION = [
   param("modelName")
     .isAlpha()
-    .isIn(modelNames)
+    .custom(modelName => isIn(modelName.toLowerCase(), lowerCaseModelNames))
+    .withMessage(MODEL_NOT_FOUND)
 ];
 
 const middleware = (req, res, next) => {
-  const modelName = _.lowerCase(req.params.modelName);
-  if (!_.has(validationResult(req).mapped(), modelName)) {
-    const modelClass = lowerCaseModels[modelName];
+  const modelName = req.params.modelName.toLowerCase()
+  
+  if (!has(validationResult(req).mapped(), modelName)) {
+    const modelClass = models.lowerCaseModels[modelName];
     if (!modelClass){
-      return next('model not found')
+      return next(MODEL_NOT_FOUND)
     }
     req.context.modelClass = modelClass
     next()
-  }
-  else {
+  } else {
     next()
   }
 };
 
-module.exports = server => server.use("/api/:modelName", VALIDATION, middleware);
+module.exports = server => server.use("/api/:modelName", VALIDATION, middleware)
