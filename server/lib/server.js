@@ -1,14 +1,14 @@
-const express = require("express");
-const app = express();
-const bodyParser = require("body-parser");
-const login = require("./app/routes/login.js");
-const signUp = require("./app/routes/singUp.js");
-const bluePrint = require('./app/routes/blue-print')
-const data = require('./app/routes/getData')
 
-const cors = require("cors");
-const morgan = require("morgan");
-const db = require("./models");
+import express from 'express'
+const app = express()
+import bodyParser from "body-parser"
+import login from "./app/routes/login.js"
+import signUp from "./app/routes/singUp.js"
+import bluePrint from './app/routes/blue-print'
+import data from './app/routes/getData'
+import cors from "cors"
+import morgan from "morgan"
+import { db } from "./models"
 
 app.disable("x-powered-by");
 app.use(morgan("dev"));
@@ -43,11 +43,11 @@ app.use((req, res, next) => {
   next()
 })
 
-db.sequelize.sync().then(function() {
+db.sync().then(function() {
   app.listen(PORT, function() {
     // eslint-disable-next-line no-console
     console.log(`Listening on PORT ${PORT}`);
   });
 });
 
-module.exports = app;
+export default app;

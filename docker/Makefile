@@ -4,6 +4,9 @@ export USER_ID =$(shell id -u)
 server:
 	docker exec -it -u node node-server bash -c 'yarn && yarn start'
 
+serve:
+	docker exec -it -u node node-server bash -c 'npm run serve'
+
 compose:
 	@echo User id for node will:  $$user_UID
 	docker-compose up -d

@@ -1,10 +1,10 @@
-const { param, validationResult } = require("express-validator/check");
-const models = require("../../../models");
-const { has } = require("lodash");
+import { param, validationResult }from "express-validator/check"
+import { lowerCaseModels } from "../../../models"
+import { has } from "lodash"
+import { isIn } from 'validator'
 const MODEL_NOT_FOUND = 'Model was not found'
-const { isIn } = require('validator')
 
-const lowerCaseModelNames = Object.keys(models.lowerCaseModels)
+const lowerCaseModelNames = Object.keys(lowerCaseModels)
 const VALIDATION = [
   param("modelName")
     .isAlpha()
@@ -16,7 +16,7 @@ const middleware = (req, res, next) => {
   const modelName = req.params.modelName.toLowerCase()
   
   if (!has(validationResult(req).mapped(), modelName)) {
-    const modelClass = models.lowerCaseModels[modelName];
+    const modelClass = lowerCaseModels[modelName];
     if (!modelClass){
       return next(MODEL_NOT_FOUND)
     }

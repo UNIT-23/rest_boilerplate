@@ -180,3 +180,4 @@ typings/
 /docker/mounts/mysql/
 /server/yarn.lock
 /server/yarn-error.log
+dist
