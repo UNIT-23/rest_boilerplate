@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "rest": "./modules/commands/index.js"
+  },
   "scripts": {
     "start": "nodemon lib/server.js --exec babel-node",
     "build": "babel lib -d dist",
@@ -25,6 +28,7 @@
     "bluebird": "^3.5.3",
     "body-parser": "^1.17.2",
     "chai": "^4.2.0",
+    "commander": "^2.19.0",
     "cors": "^2.8.5",
     "dotenv": "^6.1.0",
     "eslint": "^5.9.0",
@@ -36,6 +40,7 @@
     "express": "4.16.4",
     "express-validator": "^4.3.0",
     "http-errors": "^1.7.1",
+    "inquirer": "^6.2.1",
     "jest": "23.6.0",
     "jest-express": "^1.9.0",
     "jsonwebtoken": "^8.4.0",
