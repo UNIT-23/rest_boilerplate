@@ -19,11 +19,14 @@ services:
   #node express server
   nodeServer:
     container_name: node-server
+    build:
+      dockerfile: ./Dockerfile
+      context: ../server
     working_dir: /node/server
     restart: on-failure:2
     depends_on:
       - mysql
-    image: node:8.14.0
+    image: node-server
     command: /node/createUser.sh
     volumes:
       - ../server:/node/server
