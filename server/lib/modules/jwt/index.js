@@ -6,11 +6,11 @@ const ALGORITHM = "RS256";
 module.exports.sign = payload =>
   jwt.sign(payload, root.privateKey, {
     algorithm: ALGORITHM,
-    issuer: config.tokenIssuer
+    issuer   : config.tokenIssuer
   });
 
 module.exports.verify = token =>
   jwt.verify(token, root.publicKey, {
     algorithm: ALGORITHM,
-    issuer: config.tokenIssuer
+    issuer   : config.tokenIssuer
   });

@@ -16,6 +16,7 @@
   "keywords": [],
   "license": "ISC",
   "dependencies": {
+    "@casl/ability": "^2.5.1",
     "axios": "^0.18.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.6",

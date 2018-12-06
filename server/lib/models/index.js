@@ -6,7 +6,7 @@ import Sequelize from 'sequelize'
 import { each } from 'lodash'
 const basename = path.basename(module.filename)
 const env = process.env.NODE_ENV || "development";
-const config = require(__dirname + "/../config/config.js")[env];
+const config = require(__dirname + "/../config/config")[env];
 const lowerCaseModels = {}
 const models = {}
 let db = null
@@ -43,16 +43,16 @@ each(models, model => {
 export  { db }
 export  { lowerCaseModels }
 export { Sequelize }
-export const loading =  db.authenticate()
-  .then(() => {
-  // eslint-disable-next-line no-console
-    console.log('Database connection successfully established.')
+// export const loading =  db.authenticate()
+//   .then(() => {
+//   // eslint-disable-next-line no-console
+//     console.log('Database connection successfully established.')
   
-    return models
-  })
-  .catch((err) => {
-  // eslint-disable-next-line no-console
-    console.log(`Error connecting to database`, err)
-  })
+//     return models
+//   })
+//   .catch((err) => {
+//   // eslint-disable-next-line no-console
+//     console.log(`Error connecting to database`, err)
+//   })
 
 export default models;

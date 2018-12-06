@@ -9,8 +9,8 @@ module.exports = {
   "test": {
     "username": "root",
     "password": "root",
-    "database": "test",
-    "host"    : "localhost",
+    "database": "unit23_sam",
+    "host"    : "mysql",
     "dialect" : "mysql"
   },
   "production": {

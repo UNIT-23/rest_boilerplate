@@ -12,7 +12,7 @@ const modelIdValid = param('id').exists().isInt()
 const modelNameValid = param('modelName').isAlpha()
   .custom(modelName => isIn(modelName.toLowerCase(), lowerCaseModelNames))
   .withMessage(MODEL_NOT_FOUND)
-
+const UNAUTHORIZED = 'User does not have the required permission'
 
 // [READ]
 // GET A Model Object
@@ -66,14 +66,19 @@ router.get('/:modelName/:id/:relationName', [
 // [READ] - FINDALL
 // GET Filtered Records
 router.get('/:modelName/list', [modelNameValid], (req, res, next) => {
+  const acl = req.app.get('acl')
+  
   if (!has(validationResult(req).mapped(), 'modelName')) {
-    
-    req.context.modelClass.findAll(req.context.findOptions)
-      .then(data => {
-        res.responseData = data.map(model => model.toJSON())
-        return next()
-      })
-      .catch(err => handleAuthError(err, next))
+    if(acl.can('READ', req.params.modelName)){
+      req.context.modelClass.findAll(req.context.findOptions)
+        .then(data => {
+          res.responseData = data.map(model => model.toJSON())
+          return next()
+        })
+        .catch(next)
+    }else{
+      return next(HTTPError.Forbidden(UNAUTHORIZED))
+    }
   } else {
     next()
   }

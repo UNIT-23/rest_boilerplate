@@ -33,26 +33,33 @@ export const userLogin = async (req, res, next) => {
     );
   }
 
-  try {
-    const payload = { userId: user.id };
-    const Token = JWT.sign(payload);
-    res.responsedata = { token: Token, user: user }
-    const data = { token: Token, user: user };
-    res.status(201).json({
-      message: constant.SUCCESS_EMAIL_VERIFIED,
-      data   : data
-    });
-    return next();
-  } catch(e){
-    next(e)
-  }
+  models.Permission.findAll({
+    include: [{
+      model   : models.Role,
+      required: true,
+      through : { where: { roleId: user.roleId } }
+    }]
+  })
+    .then(permissions=>{
+      const acl = req.app.get('acl')
+      const data = {  token: JWT.sign({ userId: user.id }), user };
+      
+      acl.defineRules(permissions)
+      
+      res.responsedata = { token: data.token, user: user }
+      res.status(201).json({
+        message: constant.SUCCESS_EMAIL_VERIFIED,
+        data   : data
+      });
+
+      return next();
+      
+    })
+    .catch(next)
 };
 
 export const userSignup = async (req, res, next) => {
-  const firstname = req.body.firstname;
-  const lastname = req.body.lastname;
-  const email = req.body.email;
-  const password = req.body.password;
+  const { firstname, lastname, email, password, roleId } = req.body
 
   if (methods.newUser(firstname, lastname, email, password)) {
     return next(HTTPError.BadRequest(constant.ERROR_EMAIL_PASSWORD_REQUIRED));
@@ -65,11 +72,13 @@ export const userSignup = async (req, res, next) => {
   } 
   try{
     const newUser = await models.User.create({
-      firstname: firstname,
-      lastname : lastname,
-      email    : email,
-      password : password
+      firstname,
+      lastname ,
+      email    ,
+      password ,
+      roleId
     });
+    
     res.status(201).json({
       message: constant.USER_CREATED,
       user   : newUser

@@ -5,12 +5,13 @@ import bodyParser from "body-parser"
 import login from "./app/routes/login.js"
 import signUp from "./app/routes/singUp.js"
 import bluePrint from './app/routes/blue-print'
-import data from './app/routes/getData'
 import cors from "cors"
 import morgan from "morgan"
+import { acl } from './modules'
 import { db } from "./models"
 
 app.disable("x-powered-by");
+app.set('acl', acl)
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -34,7 +35,6 @@ app.get("/", (req, res, next) => {
 app.use("/login", login);
 app.use("/signup", signUp);
 app.use('/api',bluePrint)
-app.use('/getData',data)
 
 app.use((req, res, next) => {
   if (res.responseData) {
