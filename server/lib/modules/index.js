@@ -1,2 +1,3 @@
 export { default as acl }  from './acl';
-export { default as jwt } from './jwt'
+import * as jwt from './jwt'
+export { jwt }

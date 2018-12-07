@@ -1,8 +1,9 @@
-const JWT = require("../../modules/jwt/index");
+const { jwt } = require("../../modules");
+
 module.exports = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const decoded = JWT.verify(token);
+    const decoded = jwt.verify(token);
     res.userData = decoded;
     next();
   } catch (err) {

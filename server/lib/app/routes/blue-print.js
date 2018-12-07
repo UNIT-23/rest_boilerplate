@@ -97,7 +97,7 @@ router.get('/:modelName/count', [modelNameValid, permsissionAuth],
 
 // [CREATE]
 // POST A Model Object
-router.post('/:modelName', [modelNameValid, tokenAuth, permsissionAuth],
+router.post('/:modelName', [modelNameValid, tokenAuth],
   (req, res, next) => {
     if (!has(validationResult(req).mapped(), 'modelName')) {
       const attributes = req.body || {}
