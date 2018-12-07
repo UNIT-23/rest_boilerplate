@@ -7,25 +7,25 @@ const { isIn } = require('validator')
 const MODEL_NOT_FOUND = 'Model was not found'
 const { lowerCaseModels } = require('../../models')
 const lowerCaseModelNames = Object.keys(lowerCaseModels)
-const auth = require('../middlware/check-auth')
+const { tokenAuth, permsissionAuth } = require('../middlware')
 const modelIdValid = param('id').exists().isInt()
 const modelNameValid = param('modelName').isAlpha()
   .custom(modelName => isIn(modelName.toLowerCase(), lowerCaseModelNames))
   .withMessage(MODEL_NOT_FOUND)
-const UNAUTHORIZED = 'User does not have the required permission'
 
 // [READ]
 // GET A Model Object
 router
-  .get('/:modelName/:id',[modelNameValid, modelIdValid], (req, res, next) => {
-    if (!has(validationResult(req).mapped(), 'modelName') &&
+  .get('/:modelName/:id',[modelNameValid, modelIdValid, permsissionAuth], 
+    (req, res, next) => {
+      if (!has(validationResult(req).mapped(), 'modelName') &&
      (!has(validationResult(req).mapped(), 'id'))) {
-      res.responseData = req.context.model.toJSON()
-      next()
-    } else {
-      next()
-    }
-  })
+        res.responseData = req.context.model.toJSON()
+        next()
+      } else {
+        next()
+      }
+    })
 
 // [READ] - RELATION
 // GET A Model's Relation
@@ -57,7 +57,7 @@ router.get('/:modelName/:id/:relationName', [
           : data.toJSON()
         next()
       })
-      .catch(err => handleAuthError(err, next))
+      .catch(next)
   } else {
     next()
   }
@@ -65,94 +65,89 @@ router.get('/:modelName/:id/:relationName', [
 
 // [READ] - FINDALL
 // GET Filtered Records
-router.get('/:modelName/list', [modelNameValid], (req, res, next) => {
-  const acl = req.app.get('acl')
-  
-  if (!has(validationResult(req).mapped(), 'modelName')) {
-    if(acl.can('READ', req.params.modelName)){
+router.get('/:modelName/list', [modelNameValid, permsissionAuth],
+  (req, res, next) => {
+    if (!has(validationResult(req).mapped(), 'modelName')) {
       req.context.modelClass.findAll(req.context.findOptions)
         .then(data => {
           res.responseData = data.map(model => model.toJSON())
           return next()
         })
         .catch(next)
-    }else{
-      return next(HTTPError.Forbidden(UNAUTHORIZED))
+    } else {
+      next()
     }
-  } else {
-    next()
-  }
-})
+  })
 
 // [READ] - COUNT
 // GET Filtered Records
-router.get('/:modelName/count', [modelNameValid], (req, res, next) => {
-  if (!has(validationResult(req).mapped(), 'modelName')) {
-    req.context.modelClass.count(req.context.findOptions)
-      .then(count => {
-        res.responseData = { count }
-        next()
-      })
-      .catch(err => handleAuthError(err, next))
-  } else {
-    next()
-  }
-})
+router.get('/:modelName/count', [modelNameValid, permsissionAuth],
+  (req, res, next) => {
+    if (!has(validationResult(req).mapped(), 'modelName')) {
+      req.context.modelClass.count(req.context.findOptions)
+        .then(count => {
+          res.responseData = { count }
+          next()
+        })
+        .catch(next)
+    } else {
+      next()
+    }
+  })
 
 // [CREATE]
 // POST A Model Object
-router.post('/:modelName', [modelNameValid, auth], (req, res, next) => {
-  if (!has(validationResult(req).mapped(), 'modelName')) {
-    const attributes = req.body || {}
-    const modelClass = req.context.modelClass
-    const model = modelClass.build(attributes)
+router.post('/:modelName', [modelNameValid, tokenAuth, permsissionAuth],
+  (req, res, next) => {
+    if (!has(validationResult(req).mapped(), 'modelName')) {
+      const attributes = req.body || {}
+      const modelClass = req.context.modelClass
+      const model = modelClass.build(attributes)
+      const options = { context: req.context }
 
-    const options = { context: req.context }
-    if (!isEmpty(req.context.options)) {
-      extend(options, req.context.options)
+      if (!isEmpty(req.context.options)) {
+        extend(options, req.context.options)
+      }
+
+      modelClass.create(attributes, options)
+        .then(instance => {
+          res.responseData = instance.toJSON()
+          next()
+        })
+        .catch(next)
+    } else {
+      next()
     }
-
-    // AuthManager.canUserCreateModel(req.context.user, model)
-    //   .then(() =>
-    modelClass.create(attributes, options)
-      //  )
-      .then(instance => {
-        res.responseData = instance.toJSON()
-        next()
-      })
-      .catch(err => handleAuthError(err, next))
-  } else {
-    next()
-  }
-})
+  })
 
 // [UPDATE]
 // PUT A Model Object
 router
-  .put('/:modelName/:id', [modelNameValid, modelIdValid, auth],
-    (req, res, next) => {
-      if (!has(validationResult(req).mapped(), 'modelName') &&
+  .put('/:modelName/:id', [
+    modelNameValid, 
+    modelIdValid, 
+    tokenAuth, 
+    permsissionAuth
+  ], (req, res, next) => {
+    if (!has(validationResult(req).mapped(), 'modelName') &&
       (!has(validationResult(req).mapped(), 'id'))) {
-        const attributes = req.body || {}
-        const model = req.context.model
+      const attributes = req.body || {}
+      const model = req.context.model
 
-        // AuthManager.canUserUpdateModel(req.context.user, model)
-        //   .then(() => 
-        model.update(attributes, { context: req.context })
-        // )
-          .then(() => {
-            res.responseData = model.toJSON()
-            next()
-          })
-          .catch(err => handleAuthError(err, next))
-      } else {
-        next()
-      }
-    })
+      model.update(attributes, { context: req.context })
+        .then(() => {
+          res.responseData = model.toJSON()
+          next()
+        })
+        .catch(next)
+    } else {
+      next()
+    }
+  })
 
 // [PATCH]
 // PATCH A Model Object
-router.patch('/:modelName/:id', [modelNameValid, modelIdValid, auth],
+router.patch('/:modelName/:id', [modelNameValid, modelIdValid, tokenAuth],
   (req, res, next) => {
     if (!has(validationResult(req).mapped(), 'modelName') &&
       (!has(validationResult(req).mapped(), 'id'))) {
@@ -180,24 +175,26 @@ router.patch('/:modelName/:id', [modelNameValid, modelIdValid, auth],
 
 // [DELETE]
 // DELETE A Model Object
-router.delete('/:modelName/:id', [modelNameValid, modelIdValid, auth],
-  (req, res, next) => {
-    if (!has(validationResult(req).mapped(), 'modelName') &&
+router.delete('/:modelName/:id', [
+  modelNameValid, 
+  modelIdValid, 
+  tokenAuth, 
+  permsissionAuth
+],(req, res, next) => {
+  if (!has(validationResult(req).mapped(), 'modelName') &&
     (!has(validationResult(req).mapped(), 'id'))) {
-      const model = req.context.model
-      // AuthManager.canUserDeleteModel(req.context.user, model)
-      //   .then(() => 
-      model.destroy({ context: req.context })
-        // )
-        .then(() => {
-          res.responseData = { message: 'Model deleted successfully' }
-          next()
-        })
-        .catch(err => handleAuthError(err, next))
-    } else {
-      next()
-    }
-  })
+    const model = req.context.model
+    
+    model.destroy({ context: req.context })
+      .then(() => {
+        res.responseData = { message: 'Model deleted successfully' }
+        next()
+      })
+      .catch(next)
+  } else {
+    next()
+  }
+})
 
 function handleAuthError (err, next) {
   if (err.code && err.code === 403) {
